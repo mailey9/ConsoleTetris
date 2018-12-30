@@ -1,8 +1,14 @@
+//  TODO
+//  * win32 : optimize clrscr();
+//  * win32 : simple-console double buffering
+//  * stdio : pattern binary data's file i/o
+
 #include <stdio.h>
 #include <conio.h>
 #include <stdint.h>
 #include <memory.h>
 #include <assert.h>
+#include <stdlib.h>
 
 #include <Windows.h>
 
@@ -27,9 +33,10 @@ int clrscr()
     return system("cls");
 }
 //----------------------------------------
-Block*  g_pBlock = nullptr;
-bool    g_run    = true;
-bool    g_own = false;
+Block*  g_pBlock         = nullptr;
+bool    g_tryDownBlocked = false;
+
+bool    g_run = true;
 int     g_board[ ROW_COUNT ][ COL_COUNT ] =
 {
     1,  1,1,1,1,1,  1,1,1,1,1,  1,
@@ -61,7 +68,37 @@ int     g_board[ ROW_COUNT ][ COL_COUNT ] =
     1,  1,1,1,1,1,  1,1,1,1,1,  1,
 };
 
-inline bool IsLineFull(int i)
+Block* GenerateBlock(EBlockType e)
+{
+    assert( e >= 0 && e < SIZE_BLOCKTYPE );
+    switch ( e )
+    {
+    case I:
+        return new IBlock();
+    case J:
+        return new JBlock();
+    case L:
+        return new LBlock();
+    case O:
+        return new OBlock();
+    case S:
+        return new SBlock();
+    case T:
+        return new TBlock();
+    case Z:
+        return new ZBlock();
+    default:
+        return nullptr;
+    }
+}
+
+Block* GenerateBlock()
+{
+    int r = rand() % SIZE_BLOCKTYPE;
+    return GenerateBlock( (EBlockType)r );
+}
+
+bool IsLineFull(int i)
 {
     assert(i >= 1 && i < ROW_COUNT - 1);
     
@@ -75,6 +112,31 @@ inline bool IsLineFull(int i)
 
     return true;
 }
+
+void ClearLine(int i)
+{
+    assert( i >= 1 && i < ROW_COUNT - 1 );
+
+    for (int col = 1; col < COL_COUNT - 1; ++col)
+    {
+        g_board[ i ][ col ] = 0;
+    }
+
+    // * can be substituted with one line ::memset();
+    //::memset( g_board[ mem_point ], 0, sizeof(int)*count );
+}
+
+void BlockToBoard()
+{
+    assert( g_pBlock != nullptr );
+
+    for (int i = 0; i < 4; ++i)
+    {
+        Coord c = g_pBlock->coords[ i ];
+        g_board[ c.y ][ c.x ] = 1;
+    }
+}
+
 //----------------------------------------
 void ProcessInput()
 {
@@ -85,7 +147,8 @@ void ProcessInput()
         g_pBlock->TryRotate();
         break;
     case 's': case 'S':
-        g_pBlock->TryMove( EDir::Down );
+        // try,
+        g_tryDownBlocked = !g_pBlock->TryMove( EDir::Down );
         break;
     case 'a': case 'A':
         g_pBlock->TryMove( EDir::Left );
@@ -99,24 +162,39 @@ void ProcessInput()
     }
 }
 
-void Update(float dt)
+void Update()
 {
-    static float timeAcc = .0f;
-    timeAcc += dt;
-
-    if ( timeAcc >= 0.2f )
+    if ( g_tryDownBlocked == true )
     {
-        timeAcc -= 0.2f;
+        g_tryDownBlocked = false; // reset the flag.
+        BlockToBoard();
 
-        if ( g_pBlock != nullptr )
-        {
-            g_pBlock->TryMove( EDir::Down );
-        }
+        delete g_pBlock;
+        g_pBlock = GenerateBlock();
     }
 
-    //----
+    // *from bottom to top (except boundary)
+    int targetRow = ROW_COUNT - 2;
+    while ( targetRow > 0 )
+    {
+        if ( IsLineFull( targetRow ) == true )
+        {
+            ClearLine( targetRow );
 
-
+            // *above cells of the line . y += 1;
+            for (int r = targetRow; r > 1; --r)
+            {
+                for (int c = 1; c < COL_COUNT - 1; ++c)
+                {
+                    g_board[ r ][ c ] = g_board[ r-1 ][ c ];
+                }
+            }
+        }
+        else
+        {
+            --targetRow;
+        }
+    }
 }
 
 void Draw()
@@ -160,21 +238,32 @@ void Draw()
 
 int main( int argc, char* argv[] )
 {
-    g_pBlock = new TBlock();
+    double timeOld  = 0.0;
 
-    float timeOld  = .0f;
-    float timeCurr = .0f;
+    ::srand( 10 );  // testing seed : 10
+    g_pBlock = GenerateBlock();
 
     while ( g_run == true )
     {
+        double timeCurr  = GetTickCount64() * 0.001;
+        double timeDelta = timeCurr - timeOld;
+
         if ( _kbhit() != 0 )
         {
             ProcessInput();
         }
 
-        timeCurr = GetTickCount64() * 0.001f;
-        Update( timeCurr - timeOld );
-        timeOld = timeCurr;
+        if ( timeDelta >= 1.0 )
+        {
+            if ( g_pBlock != nullptr )
+            {
+                g_tryDownBlocked = !g_pBlock->TryMove( EDir::Down );
+            }
+
+            timeOld = timeCurr;
+        }
+
+        Update();
 
         Draw();
     }

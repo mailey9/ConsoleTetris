@@ -121,6 +121,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Block_Abstract.h" />
     <ClInclude Include="Block_I.h" />
     <ClInclude Include="Block_J.h" />
     <ClInclude Include="Block_L.h" />

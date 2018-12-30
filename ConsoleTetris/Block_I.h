@@ -1,6 +1,6 @@
 #pragma once
 
-#include "commondef.h"
+#include "Block_Abstract.h"
 
 // 000 0000 000
 //
@@ -16,6 +16,7 @@ public:
 
         anchor = coords[ 1 ];
     }
+    virtual ~IBlock() {}
 private:
     virtual Coord GetShapeOffset(ERot eRot, int idx) final
     {

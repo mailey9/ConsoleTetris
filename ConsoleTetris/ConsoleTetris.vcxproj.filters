@@ -44,5 +44,8 @@
     <ClInclude Include="Block_L.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Block_Abstract.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

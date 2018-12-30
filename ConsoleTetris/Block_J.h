@@ -1,6 +1,6 @@
 #pragma once
 
-#include "commondef.h"
+#include "Block_Abstract.h"
 
 struct JBlock : public Block
 {
@@ -14,6 +14,7 @@ public:
 
         anchor = coords[ 1 ];
     }
+    virtual ~JBlock() {}
 protected:
     virtual Coord GetShapeOffset(ERot eRot, int idx) final
     {

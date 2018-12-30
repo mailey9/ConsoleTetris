@@ -1,6 +1,6 @@
 #pragma once
 
-#include "commondef.h"
+#include "Block_Abstract.h"
 
 struct TBlock : public Block
 {
@@ -14,6 +14,7 @@ public:
 
         anchor = coords[ 1 ];
     }
+    virtual ~TBlock() {}
 protected:
     virtual Coord GetShapeOffset(ERot eRot, int idx) final
     {
