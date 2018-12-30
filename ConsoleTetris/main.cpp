@@ -24,6 +24,7 @@
 
 BOOL gotoxy( SHORT x, SHORT y )
 {
+    //
     COORD coord = { x,y };
     HANDLE h = GetStdHandle( STD_OUTPUT_HANDLE );
     return SetConsoleCursorPosition( h, coord );
