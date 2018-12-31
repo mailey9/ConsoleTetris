@@ -237,8 +237,20 @@ void Draw()
     }
 }
 
+#include "ScreenBuffer.h"
+
 int main( int argc, char* argv[] )
 {
+    ScreenBuffer buf;
+    buf.Initialize();
+
+    buf.SetColor(3, 1, FOREGROUND_RED);
+    buf.Present();
+
+    _getch();
+    
+    return 0;
+
     double timeOld  = 0.0;
 
     ::srand( 10 );  // testing seed : 10
