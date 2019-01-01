@@ -14,7 +14,7 @@ class ScreenBuffer
 public:
     enum class EColor : uint8_t
     {
-        AA = 0
+        LightGreen = 0x0002 | 0x0008
     };
 private:
     HANDLE h;
@@ -31,7 +31,7 @@ public:
     void Clear();
 
     bool Present();
-    bool SetColor(short x, short y, int attr);
+    bool SetPoint(SHORT x, SHORT y, EColor attr, TCHAR ch = TEXT(' '));
     
     const HANDLE GetHandle() const { return h; }
 };

@@ -245,7 +245,7 @@ int main( int argc, char* argv[] )
 
     ScreenBuffer buf;
     buf.Initialize();
-    buf.SetColor(3, 1, FOREGROUND_RED);
+    buf.SetPoint(3, 1, Color::LightGreen, TEXT('G'));
     buf.Present();
 
     _getch();

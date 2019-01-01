@@ -62,11 +62,16 @@ bool ScreenBuffer::Present()
     return SetConsoleActiveScreenBuffer( h );
 }
 
-bool ScreenBuffer::SetColor(short x, short y, int attr)
+bool ScreenBuffer::SetPoint(SHORT x, SHORT y, EColor attr, TCHAR ch/*=' '*/)
 {
     CHAR_INFO* pBuf = bufConsole.get();
-    pBuf[ bufSize.X * y + x ].Char.AsciiChar = 'A';
-    pBuf[ bufSize.X * y + x ].Attributes = attr;
+#ifdef _UNICODE
+    pBuf[ bufSize.X * y + x ].Char.UnicodeChar = ch;
+#else /* NotSet or MBCS */
+    pBuf[ bufSize.X * y + x ].Char.AsciiChar = ch;
+#endif
+
+    pBuf[ bufSize.X * y + x ].Attributes = (WORD)attr;
 
     return false;
 }
