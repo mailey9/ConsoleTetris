@@ -11,6 +11,11 @@
 
 class ScreenBuffer
 {
+public:
+    enum class EColor : uint8_t
+    {
+        AA = 0
+    };
 private:
     HANDLE h;
 
@@ -27,6 +32,6 @@ public:
 
     bool Present();
     bool SetColor(short x, short y, int attr);
-
+    
     const HANDLE GetHandle() const { return h; }
 };

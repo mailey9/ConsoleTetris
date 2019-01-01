@@ -241,9 +241,10 @@ void Draw()
 
 int main( int argc, char* argv[] )
 {
+    using Color = ScreenBuffer::EColor;
+
     ScreenBuffer buf;
     buf.Initialize();
-
     buf.SetColor(3, 1, FOREGROUND_RED);
     buf.Present();
 
