@@ -71,7 +71,7 @@ int     g_board[ ROW_COUNT ][ COL_COUNT ] =
 
 Block* GenerateBlock(EBlockType e)
 {
-    assert( e >= 0 && e < SIZE_BLOCKTYPE );
+    assert( e >= 0 && e < BLOCKTYPE_SIZE );
     switch ( e )
     {
     case I:
@@ -95,7 +95,7 @@ Block* GenerateBlock(EBlockType e)
 
 Block* GenerateBlock()
 {
-    int r = rand() % SIZE_BLOCKTYPE;
+    int r = rand() % BLOCKTYPE_SIZE;
     return GenerateBlock( (EBlockType)r );
 }
 
@@ -139,6 +139,7 @@ void BlockToBoard()
 }
 
 //----------------------------------------
+
 void ProcessInput()
 {
     int ch = _getch();
@@ -241,11 +242,13 @@ void Draw()
 
 int main( int argc, char* argv[] )
 {
-    using Color = ScreenBuffer::EColor;
+    using ForeColor = ScreenBuffer::EForeColor;
+    using BackColor = ScreenBuffer::EBackColor;
 
     ScreenBuffer buf;
     buf.Initialize();
-    buf.SetPoint(3, 1, Color::LightGreen, TEXT('G'));
+    buf.SetPoint(3, 1, ForeColor::Green, BackColor::Black, TEXT('G'));
+    buf.SetPoint(4, 1);
     buf.Present();
 
     _getch();

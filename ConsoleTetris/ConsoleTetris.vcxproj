@@ -132,6 +132,7 @@
     <ClInclude Include="Block_Z.h" />
     <ClInclude Include="commondef.h" />
     <ClInclude Include="ScreenBuffer.h" />
+    <ClInclude Include="_table.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
