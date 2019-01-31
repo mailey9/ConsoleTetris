@@ -62,7 +62,7 @@ bool ScreenBuffer::Present()
     return SetConsoleActiveScreenBuffer( h );
 }
 
-bool ScreenBuffer::SetPoint(SHORT x, SHORT y, EForeColor eFore, EBackColor eBack, TCHAR ch)
+bool ScreenBuffer::SetPoint(SHORT x, SHORT y, EColor attr, TCHAR ch/*=' '*/)
 {
     CHAR_INFO* pBuf = bufConsole.get();
 #ifdef _UNICODE
@@ -71,7 +71,7 @@ bool ScreenBuffer::SetPoint(SHORT x, SHORT y, EForeColor eFore, EBackColor eBack
     pBuf[ bufSize.X * y + x ].Char.AsciiChar = ch;
 #endif
 
-    pBuf[ bufSize.X * y + x ].Attributes = ((WORD)eFore | (WORD)eBack);
-    
+    pBuf[ bufSize.X * y + x ].Attributes = (WORD)attr;
+
     return false;
 }

@@ -16,7 +16,6 @@ enum class EDir : uint8_t
     Left,
     Right
 };
-
 enum ERot
 {
     _0 = 0,
@@ -36,8 +35,7 @@ enum EBlockType
     S,
     T,
     Z,
-
-    BLOCKTYPE_SIZE
+    SIZE_BLOCKTYPE
 };
 
 struct Coord

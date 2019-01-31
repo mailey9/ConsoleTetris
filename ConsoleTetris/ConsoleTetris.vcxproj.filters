@@ -53,8 +53,5 @@
     <ClInclude Include="ScreenBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="_table.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
